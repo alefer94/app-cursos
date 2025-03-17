@@ -1,21 +1,20 @@
-// src/components/LoginForm.jsx
 import React, { useState } from "react";
-import InputField from "./InputField";
-import axios from "axios"; // Importar axios
-import { useNavigate } from "react-router-dom"; 
-
-
+import { Form, Button, Alert, Spinner, Container, Row, Col, Image , Card  } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import bannerImage from "../assets/images/banner.webp"; 
+import api from "../services/api";
+import logoImage from "../assets/images/logo.png"; 
 const LoginForm = () => {
-    const navigate = useNavigate();
-
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    username: "", // Cambiado de "email" a "username"
+    username: "",
     password: "",
   });
+
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false); // Estado para manejar la carga
-  const [loginError, setLoginError] = useState(""); // Estado para manejar errores de la API
+  const [loading, setLoading] = useState(false);
+  const [loginError, setLoginError] = useState("");
 
   const validateForm = () => {
     const newErrors = {};
@@ -35,36 +34,30 @@ const LoginForm = () => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    setLoading(true); // Activar el estado de carga
-    setLoginError(""); // Limpiar errores anteriores
+    setLoading(true);
+    setLoginError("");
 
     try {
-      // Hacer la petición POST a la API
-      const response = await axios.post(
-        "https://test-frontend-dev.onrender.com/login",
+
+      
+      const response = await api.post(
+        "/login",
         {
           username: formData.username,
           password: formData.password,
         }
       );
 
-      // Manejar la respuesta exitosa
       const { access_token } = response.data;
-     
-      console.log("Token de acceso:", access_token);
-
-      // Guardar el token en el localStorage o en el estado global
       localStorage.setItem("access_token", access_token);
-
-      navigate("/modulos");
+      navigate("/dashboard"); 
     } catch (error) {
-      // Manejar errores de la API
       console.error("Error al iniciar sesión:", error);
       setLoginError(
         error.response?.data?.message || "Error al iniciar sesión. Inténtalo de nuevo."
       );
     } finally {
-      setLoading(false); // Desactivar el estado de carga
+      setLoading(false);
     }
   };
 
@@ -74,28 +67,89 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="login-form">
-      <InputField
-        label="Nombre de usuario" // Cambiado de "Correo electrónico" a "Nombre de usuario"
-        type="text"
-        name="username"
-        value={formData.username}
-        onChange={handleChange}
-        error={errors.username}
-      />
-      <InputField
-        label="Contraseña"
-        type="password"
-        name="password"
-        value={formData.password}
-        onChange={handleChange}
-        error={errors.password}
-      />
-      {loginError && <div className="api-error-message">{loginError}</div>}
-      <button type="submit" className="submit-button" disabled={loading}>
-        {loading ? "Cargando..." : "Iniciar sesión"}
-      </button>
-    </form>
+    <Container fluid  className="vh-100 w-100" >
+      <Row className="h-100">
+        {/* Columna izquierda: Banner o imagen */}
+        <Col md={6} className=" p-0 ">
+          <Image
+            src={bannerImage}
+            alt="Banner"
+            fluid
+            className="h-100 w-100  "
+            style={{ objectFit: "cover" }} 
+          />
+        </Col>
+
+        
+        <Col md={6} className="d-flex flex-column align-items-center justify-content-center background-login">
+        <Image
+            src={logoImage}
+            alt="Banner"
+            fluid
+            className=" mb-2  logo-im" 
+            style={{ objectFit: "cover" , width: "250px"}} 
+          />
+          <Card className="w-75 shadow">
+            <Card.Body>
+             
+              <Form onSubmit={handleSubmit}>
+                <Form.Group controlId="username" className="mb-3">
+                  <Form.Label>Nombre de usuario</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    isInvalid={!!errors.username}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.username}
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group controlId="password" className="mb-3">
+                  <Form.Label>Contraseña</Form.Label>
+                  <Form.Control
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    isInvalid={!!errors.password}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.password}
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                {loginError && (
+                  <Alert variant="danger" className="mb-3">
+                    {loginError}
+                  </Alert>
+                )}
+
+                <Button type="submit" variant="primary" disabled={loading} className="w-100">
+                  {loading ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                        className="me-2"
+                      />
+                      Cargando...
+                    </>
+                  ) : (
+                    "Iniciar sesión"
+                  )}
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

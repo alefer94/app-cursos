@@ -1,8 +1,8 @@
-// src/services/api.js
+
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://test-frontend-dev.onrender.com", // URL base de tu API
+  baseURL: "http://161.132.51.131:5000", // URL base de tu API
 });
 
 // Interceptor para incluir el token en las cabeceras

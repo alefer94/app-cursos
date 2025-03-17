@@ -1,110 +1,81 @@
-/* src/App.css */
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
+
+/* Estilos para el Header */
+.header {
+  background-color: #007bff;
+  color: white;
+  padding: 1rem;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  height: 100vh;
+}
+.logo-im{
+  padding-bottom: 15px;
+}
+
+.titulo-clase{
+  font-size: 35px !important;
+}
+
+.text-sidebar{
+  color:white;
+}
+.color-sidebar{
+  background: #007bff;
+}
+.background-login{
+  background: rgb(229,226,233);
+background: linear-gradient(90deg, rgba(229,226,233,1) 0%, rgba(42,105,161,1) 100%);
+}
+
+.border-banner img{
+  border-radius: 10px;
+}
+.header h1 {
   margin: 0;
 }
 
-.login-form {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
+.header nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 1rem;
 }
 
-.input-field {
-  margin-bottom: 1rem;
+.header nav ul li {
+  display: inline;
 }
 
-.input-field label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-}
-
-.input-field input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
-.input-field input.input-error {
-  border-color: #ff4d4f;
-}
-
-.error-message {
-  color: #ff4d4f;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-}
-
-.submit-button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #007bff;
+.header nav ul li a {
   color: white;
+  text-decoration: none;
+}
+
+.header nav ul li button {
+  background: none;
   border: none;
-  border-radius: 4px;
-  font-size: 1rem;
+  color: white;
   cursor: pointer;
+  font-size: 1rem;
 }
 
-.submit-button:hover {
-  background-color: #0056b3;
+.header nav ul li button:hover {
+  text-decoration: underline;
 }
 
-
-/* src/App.css */
-.api-error-message {
-  color: #ff4d4f;
-  font-size: 0.875rem;
-  margin-bottom: 1rem;
+/* Estilos para el Footer */
+.footer {
+  background-color: #f8f9fa;
+  padding: 1rem;
   text-align: center;
+  border-top: 1px solid #ddd;
 }
 
-.submit-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.rounded-image {
+  border-radius: 30px; 
+  object-fit: contain; 
 }
 
-
-/* src/App.css */
-.modulos-container {
-  padding: 2rem;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.modulo-card {
-  background: white;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
-}
-
-.clase-item {
-  background: #f9f9f9;
-  padding: 1rem;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-}
-
-.clase-item h4 {
-  margin: 0 0 0.5rem 0;
-}
-
-.clase-item p {
-  margin: 0.25rem 0;
-}
 
 .completado {
   color: green;
@@ -121,3 +92,4 @@ body {
   text-align: center;
   margin-top: 2rem;
 }
+

@@ -1,22 +1,25 @@
-// src/components/ModulosPage.jsx
 import React, { useEffect, useState } from "react";
-import api from "../services/api"; // Importar el servicio de API
-
+import { Container, Row, Col, Card, ListGroup, Spinner, Alert, Accordion, ProgressBar ,Image } from "react-bootstrap";
+import { FaCheckCircle, FaCircle } from "react-icons/fa"; 
+import api from "../services/api";
+import "../App.css"; 
+import ImageBannR from "../assets/images/Web-Desktop.png"; 
 const ModulosPage = () => {
   const [modulos, setModulos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedClase, setSelectedClase] = useState(null);
 
   useEffect(() => {
     const fetchModulos = async () => {
       try {
-        const response = await api.get("/api/modulos"); // Hacer la petición GET
-        setModulos(response.data); // Guardar los datos en el estado
+        const response = await api.get("/api/modulos");
+        setModulos(response.data);
       } catch (error) {
         console.error("Error al obtener los módulos:", error);
         setError("Error al cargar los módulos. Inténtalo de nuevo.");
       } finally {
-        setLoading(false); // Desactivar el estado de carga
+        setLoading(false);
       }
     };
 
@@ -24,44 +27,110 @@ const ModulosPage = () => {
   }, []);
 
   if (loading) {
-    return <div>Cargando módulos...</div>;
+    return (
+      <div className="text-center mt-5">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </Spinner>
+        <p>Cargando módulos...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="error-message">{error}</div>;
+    return (
+      <Alert variant="danger" className="mt-4">
+        {error}
+      </Alert>
+    );
   }
 
+  const handleClaseClick = (clase) => {
+    setSelectedClase(clase);
+  };
+
   return (
-    <div className="modulos-container">
-      <h1>Módulos Disponibles</h1>
-      {modulos.map((modulo, index) => (
-        <div key={index} className="modulo-card">
-          <h2>{modulo.titulo}</h2>
-          <p>{modulo.descripcion}</p>
-          <h3>Clases:</h3>
-          <ul>
-            {modulo.clases.map((clase, idx) => (
-              <li key={idx} className="clase-item">
-                <h4>{clase.titulo}</h4>
-                <p>{clase.descripcion}</p>
-                <p>Duración: {clase.duracion}</p>
+    <Container className="mt-4">
+      <h1 className="text-center mb-4">Módulos</h1>
+      <Row>
+        <Col md={9}>
+          {selectedClase ? (
+            <Card>
+              <Card.Body>
+                <Card.Title className="titulo-clase">{selectedClase.titulo}</Card.Title>
+                {selectedClase.video && (
+                  <div className="mt-3">
+                    <iframe
+                      width="100%"
+                      height="400"
+                      src={`https://www.youtube.com/embed/${selectedClase.video.split("v=")[1]}`}
+                      title={selectedClase.titulo}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                )}
+                <Card.Text>{selectedClase.descripcion}</Card.Text>
                 <p>
-                  Estado:{" "}
-                  {clase.completado ? (
-                    <span className="completado">Completado</span>
-                  ) : (
-                    <span className="no-completado">No completado</span>
-                  )}
+                  <strong>Duración:</strong> {selectedClase.duracion}
                 </p>
-                <a href={clase.video} target="_blank" rel="noopener noreferrer">
-                  Ver video
-                </a>
-              </li>
+
+         
+                <p>
+                  <strong>Estado</strong>{" "}
+                  
+                </p>
+
+
+                <ProgressBar
+                  now={selectedClase.completado ? 100 : 50} 
+                  label={`${selectedClase.completado ? "100%" : "50%"}`}
+                  variant={selectedClase.completado ? "success" : "danger"} 
+                />
+              </Card.Body>
+            </Card>
+          ) : (
+            <Image
+            src={ImageBannR}
+            alt="Banner"
+            fluid
+            className="h-100 w-100  "
+            style={{ objectFit: "cover" }} 
+          />
+          )}
+        </Col>
+
+        <Col md={3}>
+          <Accordion>
+            {modulos.map((modulo, index) => (
+              <Accordion.Item eventKey={String(index)} key={index}>
+                <Accordion.Header>{modulo.titulo}</Accordion.Header>
+                <Accordion.Body>
+                  <ListGroup>
+                    {modulo.clases.map((clase, idx) => (
+                      <ListGroup.Item
+                        key={idx}
+                        onClick={() => handleClaseClick(clase)}
+                        style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
+                      >
+                       
+                        {clase.completado ? (
+                          <FaCheckCircle className="me-2 text-success" />
+                        ) : (
+                          <FaCircle className="me-2 text-danger" />
+                        )}
+                        {clase.titulo}
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                </Accordion.Body>
+              </Accordion.Item>
             ))}
-          </ul>
-        </div>
-      ))}
-    </div>
+          </Accordion>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
